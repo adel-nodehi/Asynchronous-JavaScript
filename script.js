@@ -4,39 +4,43 @@ const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
+/* // Our First AJAX Call: XMLHttpRequest
 
-// const getCountryData = function (country) {
-//   const request = new XMLHttpRequest();
-//   request.open('Get', `https://restcountries.com/v3.1/name/${country}`);
-//   request.send();
+const getCountryData = function (country) {
+  const request = new XMLHttpRequest();
+  request.open('Get', `https://restcountries.com/v3.1/name/${country}`);
+  request.send();
 
-//   request.addEventListener('load', function () {
-//     const [data] = JSON.parse(request.responseText);
-//     console.log(data);
+  request.addEventListener('load', function () {
+    const [data] = JSON.parse(request.responseText);
+    console.log(data);
 
-//     const html = `
-//     <article class="country">
-//         <img class="country__img" src="${data.flags.png}" />
-//         <div class="country__data">
-//         <h3 class="country__name">${data.name.common}</h3>
-//         <h4 class="country__region">${data.region}</h4>
-//         <p class="country__row"><span>👫</span>${(
-//           data.population / 1_000_000
-//         ).toFixed(1)} people</p>
-//         <p class="country__row"><span>🗣️</span>${
-//           Object.values(data.languages)[0]
-//         }</p>
-//         <p class="country__row"><span>💰</span>${
-//           Object.values(data.currencies)[0].name
-//         }</p>
-//         </div>
-//     </article>`;
+    const html = `
+    <article class="country">
+        <img class="country__img" src="${data.flags.png}" />
+        <div class="country__data">
+        <h3 class="country__name">${data.name.common}</h3>
+        <h4 class="country__region">${data.region}</h4>
+        <p class="country__row"><span>👫</span>${(
+          data.population / 1_000_000
+        ).toFixed(1)} people</p>
+        <p class="country__row"><span>🗣️</span>${
+          Object.values(data.languages)[0]
+        }</p>
+        <p class="country__row"><span>💰</span>${
+          Object.values(data.currencies)[0].name
+        }</p>
+        </div>
+    </article>`;
 
-//     countriesContainer.insertAdjacentHTML('beforeend', html);
-//     countriesContainer.style.opacity = 1;
-//   });
-// };
+    countriesContainer.insertAdjacentHTML('beforeend', html);
+    countriesContainer.style.opacity = 1;
+  });
+};
+*/
 
+///////////////////////////////////////
+// Welcome to Callback Hell
 const renderCountry = function (data, className = '') {
   const html = `
     <article class="country ${className}">
@@ -59,7 +63,7 @@ const renderCountry = function (data, className = '') {
   countriesContainer.insertAdjacentHTML('beforeend', html);
   countriesContainer.style.opacity = 1;
 };
-
+/*
 const getCountryAndNeighbour = function (country) {
   // AJAX call country 1
   const request = new XMLHttpRequest();
@@ -108,3 +112,26 @@ setTimeout(() => {
     }, 1000);
   }, 1000);
 }, 1000);
+*/
+
+///////////////////////////////////////
+// Consuming Promises
+
+// const getCountryData = function (country) {
+//   fetch(`https://restcountries.com/v3.1/name/${country}`)
+//     .then(function (response) {
+//       console.log(response);
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       console.log(data);
+//       renderCountry(data[0]);
+//     });
+// };
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => renderCountry(data[0]));
+};
+
+getCountryData('portugal');
