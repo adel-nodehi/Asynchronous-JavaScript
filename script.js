@@ -183,7 +183,7 @@ getCountryData('australia');
 */
 
 ///////////////////////////////////////
-// The Event Loop in Practice
+/* // The Event Loop in Practice
 
 // In which order this lines of code will be executed?
 console.log('Test start');
@@ -196,3 +196,60 @@ Promise.resolve('Resolve promise 2').then(res => {
 });
 
 console.log('Test end');
+*/
+
+///////////////////////////////////////
+// Building a Simple Promise
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log('Lottery drow is happening 🔮');
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve('You WIN 💰');
+    } else {
+      reject(new Error('You lost your money ☹'));
+    }
+  }, 2000);
+});
+
+lotteryPromise
+  .then(resolve => console.log(resolve))
+  .catch(err => console.error(err));
+
+// Promisifying setTimeout
+const wait = second =>
+  new Promise(resolve => setTimeout(resolve, second * 1000));
+
+wait(1)
+  .then(() => {
+    console.log('1 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('2 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('3 second passed');
+    return wait(1);
+  })
+  .then(() => {
+    console.log('4 second passed');
+  });
+
+// // Callback Hell
+// setTimeout(() => {
+//   console.log('1 second passed');
+//   setTimeout(() => {
+//     console.log('2 seconds passed');
+//     setTimeout(() => {
+//       console.log('3 seconds passed');
+//       setTimeout(() => {
+//         console.log('4 seconds passed');
+//       }, 1000);
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
+
+Promise.resolve('asd').then(x => console.log(x));
+Promise.reject(new Error('Problem!')).catch(x => console.error(x));
