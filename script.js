@@ -121,7 +121,7 @@ setTimeout(() => {
 */
 
 ///////////////////////////////////////
-// Consuming Promises
+/* // Consuming Promises
 // Chaining Promises
 // Handling Rejected Promises
 // Throwing Errors Manually
@@ -180,3 +180,19 @@ btn.addEventListener('click', function () {
 });
 
 getCountryData('australia');
+*/
+
+///////////////////////////////////////
+// The Event Loop in Practice
+
+// In which order this lines of code will be executed?
+console.log('Test start');
+setTimeout(() => console.log('0 second timer'), 0);
+Promise.resolve('Resolve promise 1').then(res => console.log(res));
+
+Promise.resolve('Resolve promise 2').then(res => {
+  for (let i = 0; i < 1000000000; i++) {}
+  console.log(res);
+});
+
+console.log('Test end');
