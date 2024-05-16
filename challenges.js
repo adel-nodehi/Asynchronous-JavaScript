@@ -917,22 +917,22 @@ console.log(rivian.speedUS);
 */
 
 /* // 16 CHALLENGE #1
-const responseDate = JSON.parse(localStorage.getItem('data'));
-console.log(responseDate);
-
 const whereAmI = function (lat, lng) {
-  fetch(`https://geocode.xyz/${lat},${lng}?geoit=json`)
-    .then(response => response.json())
+  fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+  )
+    .then(response => {
+      if (!response.ok) throw new Error('Server dos not response');
+      return response.json();
+    })
     .then(data => {
-      // Data validation
-      if (data.city === 'Throttled! See geocode.xyz/pricing')
-        throw new Error('Server dos not response');
+      console.log(data);
 
-      // console.log(JSON.stringify(data));
+      console.log(`You are in ${data.address.city}, ${data.address.country}`);
 
-      console.log(`You are in ${data.city}, ${data.country}`);
-
-      return fetch(`https://restcountries.com/v3.1/name/${data.country}`);
+      return fetch(
+        `https://restcountries.com/v3.1/name/${data.address.country}`
+      );
     })
     .then(response => response.json())
     .then(data => {
@@ -944,12 +944,12 @@ const whereAmI = function (lat, lng) {
     .finally(() => (countriesContainer.style.opacity = 1));
 };
 
-// whereAmI(52.508, 13.381);
-// whereAmI(19.037, 72.87);
+whereAmI(52.508, 13.381);
+whereAmI(19.037, 72.87);
 whereAmI(-33.933, 18.47);
 */
 
-// 16 CHALLENGE #2
+/* // 16 CHALLENGE #2
 
 const imgContainer = document.querySelector('.images');
 
@@ -990,3 +990,4 @@ createImage('img/img-1.jpg')
   })
   .then(() => (currwntImg.style.display = 'none'))
   .catch(err => console.error(err));
+*/
