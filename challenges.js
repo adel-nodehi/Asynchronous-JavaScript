@@ -845,7 +845,7 @@ tesla.accelerate();
 console.log(tesla);
 */
 
-/*// 14 CHALLENGE #4
+/* // 14 CHALLENGE #4
 
 class CarCl {
   constructor(make, speed) {
@@ -916,6 +916,7 @@ console.log(rivian);
 console.log(rivian.speedUS);
 */
 
+/* // 16 CHALLENGE #1
 const responseDate = JSON.parse(localStorage.getItem('data'));
 console.log(responseDate);
 
@@ -946,3 +947,46 @@ const whereAmI = function (lat, lng) {
 // whereAmI(52.508, 13.381);
 // whereAmI(19.037, 72.87);
 whereAmI(-33.933, 18.47);
+*/
+
+// 16 CHALLENGE #2
+
+const imgContainer = document.querySelector('.images');
+
+const createImage = function (imagePath) {
+  return new Promise(function (resolve, reject) {
+    const img = document.createElement('img');
+    img.src = `${imagePath}`;
+
+    img.addEventListener('load', () => {
+      imgContainer.append(img);
+      resolve(img);
+    });
+
+    img.addEventListener('error', () => reject(new Error('Image not found')));
+  });
+};
+
+const wait = function (second) {
+  return new Promise(resolve => setTimeout(resolve, second * 1000));
+};
+
+let currwntImg;
+
+createImage('img/img-1.jpg')
+  .then(img => {
+    currwntImg = img;
+    console.log('Image 1 loaded');
+    return wait(2);
+  })
+  .then(() => {
+    currwntImg.style.display = 'none';
+    return createImage('img/img-2.jpg');
+  })
+  .then(img => {
+    currwntImg = img;
+    console.log('Image 2 loaded');
+    return wait(2);
+  })
+  .then(() => (currwntImg.style.display = 'none'))
+  .catch(err => console.error(err));
