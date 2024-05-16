@@ -301,7 +301,7 @@ btn.addEventListener('click', whereAmI);
 */
 
 ///////////////////////////////////////
-// Consuming Promises with Async/Await
+/* // Consuming Promises with Async/Await
 // Error Handling With try...catch
 
 const getPosition = function () {
@@ -343,3 +343,72 @@ const whereAmI = async function () {
 };
 
 whereAmI();
+*/
+
+///////////////////////////////////////
+// Returning Values from Async Functions
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+
+// fetch(`https://restcountries.com/v3.1/name/${country}`)
+//   .then(res => res.json())
+//   .then(data => console.log(data));
+
+const whereAmI = async function () {
+  try {
+    // Geolocation
+    const position = await getPosition();
+    const { latitude: lat, longitude: lng } = position.coords;
+
+    // Reverse geoCoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+    );
+    if (!resGeo.ok) throw new Error('Problem getting location data');
+
+    const dataGeo = await resGeo.json();
+
+    // Country data
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo.address.country}`
+    );
+    if (!res.ok) throw new Error('Problem getting country');
+    const data = await res.json();
+    renderCountry(data[0]);
+
+    return `You are in ${dataGeo.address.city}, ${dataGeo.address.country}`; // The fulfilled value of returned promise
+  } catch (err) {
+    console.error(err, 'Catch block 💥');
+    renderCountry(`Something went wrong ${err}`);
+
+    // Reject promise returned from async function
+    // throw err; // not needed for new version of JS
+  }
+};
+
+console.log('1: Will get location');
+// const city = whereAmI();
+// console.log(city);
+
+// whereAmI()
+//   .then(city => console.log(`2: ${city}`))
+//   .catch(err => console.error(`2: ${err}`, '💣💣'))
+//   .finally(() => console.log('3: Finished getting location'));
+
+// console.log('3: Finished getting location');
+
+// IIFE: Immediatly-Invoked Function Expression
+(async function () {
+  try {
+    const city = await whereAmI();
+    console.log(`2: ${city}`);
+  } catch (err) {
+    console.error(`2: ${err}`, '💣💣');
+  }
+
+  console.log('3: Finished getting location');
+})();
