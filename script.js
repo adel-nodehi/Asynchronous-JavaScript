@@ -302,6 +302,7 @@ btn.addEventListener('click', whereAmI);
 
 ///////////////////////////////////////
 // Consuming Promises with Async/Await
+// Error Handling With try...catch
 
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
@@ -314,23 +315,31 @@ const getPosition = function () {
 //   .then(data => console.log(data));
 
 const whereAmI = async function () {
-  // Geolocation
-  const position = await getPosition();
-  const { latitude: lat, longitude: lng } = position.coords;
+  try {
+    // Geolocation
+    const position = await getPosition();
+    const { latitude: lat, longitude: lng } = position.coords;
 
-  // Reverse geoCoding
-  const resGeo = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
-  );
-  const dataGeo = await resGeo.json();
+    // Reverse geoCoding
+    const resGeo = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+    );
+    if (!resGeo.ok) throw new Error('Problem getting location data');
 
-  // Country data
-  const res = await fetch(
-    `https://restcountries.com/v3.1/name/${dataGeo.address.country}`
-  );
-  const data = await res.json();
-  console.log(data);
-  renderCountry(data[0]);
+    const dataGeo = await resGeo.json();
+
+    // Country data
+    const res = await fetch(
+      `https://restcountries.com/v3.1/name/${dataGeo.address.country}`
+    );
+    if (!res.ok) throw new Error('Problem getting country');
+    const data = await res.json();
+    console.log(data);
+    renderCountry(data[0]);
+  } catch (err) {
+    console.error(err, 'Catch block 💥');
+    renderCountry(`Something went wrong ${err}`);
+  }
 };
 
 whereAmI();
