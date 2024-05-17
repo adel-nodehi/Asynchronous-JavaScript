@@ -447,7 +447,7 @@ get3Countries('portugal', 'canada', 'tanzania');
 */
 
 ///////////////////////////////////////
-// Other Promise Combinators: race, allSettled and any
+/* // Other Promise Combinators: race, allSettled and any
 
 // Promise.race
 (async function () {
@@ -494,3 +494,4 @@ Promise.any([
 ])
   .then(res => console.log(res))
   .catch(err => console.error(err));
+*/
